@@ -1,6 +1,6 @@
 NAME = philo
 CC = cc
-CFLAGS = -pthread -Wall -Wextra -Werror
+CFLAGS = -pthread -Wall -Wextra -Werror -fsanitize=thread -g3
 HEADER = ./includes
 
 SRC = ./philosopher.c ./utils.c 

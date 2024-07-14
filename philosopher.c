@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:20:53 by pscala            #+#    #+#             */
-/*   Updated: 2024/07/14 18:32:04 by pscala           ###   ########.fr       */
+/*   Updated: 2024/07/14 18:44:34 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,9 +224,9 @@ int	grab_and_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->args->printmutex);
 	if (eating(philo) == -1)
 	{
-		return (-1);
 		pthread_mutex_unlock(&philo->fork);
 		pthread_mutex_unlock(philo->nextfork);
+		return (-1);
 	}
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(philo->nextfork);
@@ -244,7 +244,8 @@ void	sleep_and_think(t_philo *philo)
 	pthread_mutex_unlock(&philo->args->printmutex);
 	usleep(philo->args->time_to_sleep);
 	pthread_mutex_lock(&philo->args->printmutex);
-	printf("%s[%ld] %d  is thinking 🤔💭%s\n\n", ORANGE, time, philo->id, RESET);
+	printf("%s[%ld] %d  is thinking 🤔💭 *hmmm*%s\n\n", ORANGE, time, philo->id,
+		RESET);
 	pthread_mutex_unlock(&philo->args->printmutex);
 }
 
