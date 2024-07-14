@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:20:53 by pscala            #+#    #+#             */
-/*   Updated: 2024/07/13 21:24:16 by pscala           ###   ########.fr       */
+/*   Updated: 2024/07/14 18:32:04 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	init_args(t_args *args, char **av, int ac)
 	args->nb_of_philo = ft_atoi(av[1]);
 	if (args->nb_of_philo == 0)
 		return (-1);
-	args->time_to_die = ft_atoi(av[2]);
+	args->time_to_die = (ft_atoi(av[2]) / 1000);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
 	args->nb_of_time_to_eat = -1;
@@ -160,7 +160,7 @@ int	init_tab_philos(t_philo **philos, t_args *args)
 			return (printf("Mutex error"), -1);
 		if (pthread_mutex_init((&(*philos)[i].mealsmutex), NULL) != 0)
 			return (printf("Mutex error"), -1);
-		if (i + 1 == args->nb_of_philo)
+		if (i + 1 == args->nb_of_philo && args->nb_of_philo != 1)
 			(*philos)[i].nextfork = &(*philos)[0].fork;
 		else if (args->nb_of_philo > 1)
 			(*philos)[i].nextfork = &(*philos)[i + 1].fork;
@@ -168,51 +168,84 @@ int	init_tab_philos(t_philo **philos, t_args *args)
 	}
 	return (0);
 }
-void	eating(t_philo *philo)
+
+int	check_if_dead(t_philo *philo, long int time)
+{
+	long int	real_time;
+
+	real_time = get_time();
+	if (real_time - philo->last_meal > philo->args->time_to_die)
+	{
+		pthread_mutex_lock(&philo->args->printmutex);
+		printf("%s[%ld] %d  died 💀 *rip*%s\n\n", RED, time, philo->id, RESET);
+		pthread_mutex_unlock(&philo->args->printmutex);
+		return (-1);
+	}
+	return (0);
+}
+
+int	eating(t_philo *philo)
 {
 	long int	time;
 
 	time = get_time() - philo->args->start;
-	pthread_mutex_lock(&philo->args->printmutex);
-	printf("%s[%ld] %d  is eating *yummy*%s\n", YELLOW, time, philo->id, RESET);
-	pthread_mutex_unlock(&philo->args->printmutex);
+	if (check_if_dead(philo, time) == -1)
+		return (-1);
 	pthread_mutex_lock(&philo->mealsmutex);
+	pthread_mutex_lock(&philo->args->printmutex);
+	printf("%s[%ld] %d  is eating 🍝 *yummy*%s\n\n", YELLOW, time, philo->id,
+		RESET);
+	pthread_mutex_unlock(&philo->args->printmutex);
 	philo->last_meal = get_time();
 	usleep(philo->args->time_to_eat);
 	philo->nb_of_meals++;
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(&philo->mealsmutex);
+	return (0);
 }
-void	grab_and_eat(t_philo *philo)
+
+int	grab_and_eat(t_philo *philo)
 {
 	long int	time;
 
 	time = get_time() - philo->args->start;
+	if (philo->nextfork == NULL)
+		return (printf("only 1 fork\n"), -1);
 	pthread_mutex_lock(&philo->fork);
+	pthread_mutex_lock(philo->nextfork);
 	pthread_mutex_lock(&philo->args->printmutex);
-	printf("%s[%ld] %d  has taken a fork%s 🍽️\n", PURPLE, time, philo->id,
+	printf("%s[%ld] %d  has taken a fork%s 🍴\n\n", PURPLE, time, philo->id,
 		RESET);
 	pthread_mutex_unlock(&philo->args->printmutex);
-	pthread_mutex_lock(philo->nextfork);
 	time = get_time() - philo->args->start;
 	pthread_mutex_lock(&philo->args->printmutex);
-	printf("%s[%ld] %d  has taken a fork%s 🍽️\n", PURPLE, time, philo->id,
+	printf("%s[%ld] %d  has taken a fork%s 🍴\n\n", PURPLE, time, philo->id,
 		RESET);
 	pthread_mutex_unlock(&philo->args->printmutex);
-	eating(philo);
+	if (eating(philo) == -1)
+	{
+		return (-1);
+		pthread_mutex_unlock(&philo->fork);
+		pthread_mutex_unlock(philo->nextfork);
+	}
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(philo->nextfork);
+	return (0);
 }
 
-void	ft_sleep(t_philo *philo)
+void	sleep_and_think(t_philo *philo)
 {
 	long int	time;
 
 	time = get_time() - philo->args->start;
 	pthread_mutex_lock(&philo->args->printmutex);
-	printf("%s[%ld] %d  is sleeping zzz%s\n", CYAN, time, philo->id, RESET);
+	printf("%s[%ld] %d  is sleeping 🛏️  *zzz*%s\n\n", CYAN, time, philo->id,
+		RESET);
 	pthread_mutex_unlock(&philo->args->printmutex);
 	usleep(philo->args->time_to_sleep);
+	pthread_mutex_lock(&philo->args->printmutex);
+	printf("%s[%ld] %d  is thinking 🤔💭%s\n\n", ORANGE, time, philo->id, RESET);
+	pthread_mutex_unlock(&philo->args->printmutex);
 }
 
 void	*routine(void *thread)
@@ -224,8 +257,9 @@ void	*routine(void *thread)
 	{
 		if (philo->nb_of_meals == philo->args->nb_of_time_to_eat)
 			break ;
-		grab_and_eat(philo);
-		ft_sleep(philo);
+		if (grab_and_eat(philo) == -1)
+			break ;
+		sleep_and_think(philo);
 	}
 	return (NULL);
 }

@@ -1,6 +1,6 @@
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -pthread -Wall -Wextra -Werror
 HEADER = ./includes
 
 SRC = ./philosopher.c ./utils.c 
