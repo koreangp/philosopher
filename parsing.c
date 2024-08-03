@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 16:00:47 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/03 16:04:38 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/03 18:31:05 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ int	init_args(t_args *args, char **av, int ac)
 	args->time_to_sleep = ft_atoi(av[4]);
 	args->nb_of_time_to_eat = -1;
 	args->flag = -1;
-	args->countp = 0;
+	args->philo_in_queue = 0;
 	if (pthread_mutex_init(&args->printmutex, NULL) != 0)
 		return (-1);
 	if (pthread_mutex_init(&args->deadmutex, NULL) != 0)
 		return (-1);
-	if (pthread_mutex_init(&args->mutex_countp, NULL) != 0)
+	if (pthread_mutex_init(&args->mutex_philo_in_queue, NULL) != 0)
 		return (-1);
 	if (ac == 6)
 	{

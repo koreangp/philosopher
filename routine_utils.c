@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 16:13:04 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/03 16:22:02 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/03 18:30:02 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	ft_wait_everyone(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->args->mutex_countp);
-	philo->args->countp++;
-	pthread_mutex_unlock(&philo->args->mutex_countp);
+	pthread_mutex_lock(&philo->args->mutex_philo_in_queue);
+	philo->args->philo_in_queue++;
+	pthread_mutex_unlock(&philo->args->mutex_philo_in_queue);
 	while (1)
 	{
-		pthread_mutex_lock(&philo->args->mutex_countp);
-		if (philo->args->countp == philo->args->nb_of_philo)
+		pthread_mutex_lock(&philo->args->mutex_philo_in_queue);
+		if (philo->args->philo_in_queue == philo->args->nb_of_philo)
 		{
 			if (philo->args->flag == -1)
 			{
@@ -30,10 +30,10 @@ void	ft_wait_everyone(t_philo *philo)
 			pthread_mutex_lock(&philo->mealsmutex);
 			philo->last_meal = philo->args->start;
 			pthread_mutex_unlock(&philo->mealsmutex);
-			pthread_mutex_unlock(&philo->args->mutex_countp);
+			pthread_mutex_unlock(&philo->args->mutex_philo_in_queue);
 			break ;
 		}
-		pthread_mutex_unlock(&philo->args->mutex_countp);
+		pthread_mutex_unlock(&philo->args->mutex_philo_in_queue);
 		usleep(500);
 	}
 }

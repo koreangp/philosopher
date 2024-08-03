@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 16:14:57 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/03 16:17:38 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/03 18:32:36 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ void	ft_wait_again(t_philo *philos)
 {
 	while (1)
 	{
-		pthread_mutex_lock(&philos->args->mutex_countp);
-		if (philos->args->countp == philos->args->nb_of_philo)
+		pthread_mutex_lock(&philos->args->mutex_philo_in_queue);
+		if (philos->args->philo_in_queue == philos->args->nb_of_philo)
 		{
-			pthread_mutex_unlock(&philos->args->mutex_countp);
+			pthread_mutex_unlock(&philos->args->mutex_philo_in_queue);
 			break ;
 		}
-		pthread_mutex_unlock(&philos->args->mutex_countp);
+		pthread_mutex_unlock(&philos->args->mutex_philo_in_queue);
 		usleep(500);
 	}
 	usleep(500);

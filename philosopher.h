@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:22:01 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/03 16:28:33 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/03 18:31:03 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ typedef struct s_args
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nb_of_time_to_eat;
-	int				countp;
+	int				philo_in_queue;
 	long int		start;
 	int				flag;
-	pthread_mutex_t	mutex_countp;
+	pthread_mutex_t	mutex_philo_in_queue;
 	pthread_mutex_t	printmutex;
 	pthread_mutex_t	deadmutex;
 }					t_args;
