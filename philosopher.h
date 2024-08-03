@@ -6,12 +6,12 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:22:01 by pscala            #+#    #+#             */
-/*   Updated: 2024/07/13 21:18:23 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/03 16:28:33 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSPHER_H
-# define PHILOSPHER_H
+#ifndef PHILOSOPHER_H
+# define PHILOSOPHER_H
 
 # include <pthread.h>
 # include <stdio.h>
@@ -23,7 +23,7 @@
 
 # define RED "\033[31m"
 # define GREEN "\033[32m"
-# define YELLOW "\033[33m"
+# define YELLOW "\033[38;5;226m"
 # define BLUE "\033[34m"
 # define MAGENTA "\033[35m"
 # define CYAN "\033[36m"
@@ -38,12 +38,17 @@
 typedef struct s_args
 {
 	int				nb_of_philo;
+	int				dead;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nb_of_time_to_eat;
+	int				countp;
 	long int		start;
+	int				flag;
+	pthread_mutex_t	mutex_countp;
 	pthread_mutex_t	printmutex;
+	pthread_mutex_t	deadmutex;
 }					t_args;
 
 typedef struct s_philo
@@ -67,5 +72,23 @@ int					is_good_int(char *str);
 int					ft_pars(char **av);
 int					init_args(t_args *args, char **av, int ac);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
+void				*routine(void *thread);
+void				*visor_routine(void *thread);
+int					creat_threads(t_philo *philos, t_args *args);
+void				ft_wait_again(t_philo *philos);
+void				visor_loop(t_philo *philos, int i, int complete);
+int					check_if_dead(t_philo *philo);
+void				ft_sleep(long int time_usleep);
+int					eating(t_philo *philo);
+int					sleep_and_think(t_philo *philo);
+int					grab_and_eat(t_philo *philo);
+void				ft_wait_everyone(t_philo *philo);
+int					philo_pos(t_philo *philo);
+int					case_one_philo(t_philo *philo);
+int					is_he_dead(t_philo *philo);
+void				ft_print(t_philo *philo, char *str, char *color);
+int					init_args(t_args *args, char **av, int ac);
+int					init_tab_philos(t_philo **philos, t_args *args);
+long int			get_time(void);
 
 #endif

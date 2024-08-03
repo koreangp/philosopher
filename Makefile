@@ -1,14 +1,14 @@
 NAME = philo
 CC = cc
-CFLAGS = -pthread -Wall -Wextra -Werror -fsanitize=thread -g3
+CFLAGS = -pthread -Wall -Wextra -Werror -g3 -fsanitize=thread
 HEADER = ./includes
 
-SRC = ./philosopher.c ./utils.c 
+SRC = ./philosopher.c ./utils.c ./parsing.c ./routine.c ./routine_utils.c ./visor_routine.c
 OBJ = $(SRC:.c=.o)
 
 GREEN    = \033[38;5;76m
 RED        = \033[38;5;160m
-YELLOW    = \033[38;5;226m
+YELLOW    = \033[38;5;226m  
 ORANGE    = \033[38;5;202m
 PURPLE    = \033[38;5;213m
 LBLUE    = \033[38;5;51m

@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 14:05:56 by pscala            #+#    #+#             */
-/*   Updated: 2024/07/12 14:13:14 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/03 16:02:44 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,51 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		s2++;
 	}
 	return (0);
+}
+
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (-1);
+	while (str[i])
+		i++;
+	return (i);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (0);
+	return (-1);
+}
+
+int	is_alnum(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (-1);
+	if (str[i] == '-')
+		return (-1);
+	if (str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]) == -1)
+			return (-1);
+		i++;
+	}
+	return (0);
+}
+long int	get_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (printf("could not get time"), -1);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
