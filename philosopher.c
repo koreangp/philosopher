@@ -6,11 +6,20 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:20:53 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/03 16:22:10 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/05 13:59:45 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
+
+long int	get_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (printf("could not get time"), -1);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
 
 int	creat_threads(t_philo *philos, t_args *args)
 {

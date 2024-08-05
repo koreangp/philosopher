@@ -6,7 +6,7 @@
 /*   By: pscala <pscala@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 14:05:56 by pscala            #+#    #+#             */
-/*   Updated: 2024/08/03 16:02:44 by pscala           ###   ########.fr       */
+/*   Updated: 2024/08/05 13:59:52 by pscala           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,4 @@ int	is_alnum(char *str)
 		i++;
 	}
 	return (0);
-}
-long int	get_time(void)
-{
-	struct timeval	tv;
-
-	if (gettimeofday(&tv, NULL) == -1)
-		return (printf("could not get time"), -1);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
